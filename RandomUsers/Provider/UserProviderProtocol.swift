@@ -8,6 +8,10 @@
 import Foundation
 import Moya
 
-protocol UserProviderProtocol {
-    func listOfUsers(userCount: Int)
+public protocol UserProviderProtocol {
+    func fetch(
+        page: Int,
+        perPage: Int,
+        completion: @escaping (Result<[User], Error>) -> Void
+    )
 }

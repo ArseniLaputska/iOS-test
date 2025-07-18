@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum UserServices {
-    case userList(userCount: Int)
+    case users(page: Int, results: Int)
 }
 
 extension UserServices: TargetType {
@@ -34,9 +34,15 @@ extension UserServices: TargetType {
 
     var task: Task {
         switch self {
-        case let .userList(userCount):
-            return .requestParameters(parameters: ["results": userCount], encoding:  URLEncoding.queryString)
-        }
+            case let .users(page, results):
+                let params: [String: Any] = [
+                    "page": page,
+                    "results": results,
+                    "seed": "ios‑test",
+                    "inc": "name,email,location,picture"
+                ]
+                return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+            }
     }
 
     var headers: [String: String]? {

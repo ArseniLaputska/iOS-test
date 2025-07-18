@@ -8,25 +8,36 @@
 import Foundation
 import Moya
 
-class UserProvider: UserProviderProtocol {
+final public class UserProvider: UserProviderProtocol {
     private let service: MoyaProvider<UserServices>
     
-    init(service: MoyaProvider<UserServices>) {
+    init(service: MoyaProvider<UserServices> = .init()) {
         self.service = service
     }
     
-    func listOfUsers(userCount: Int) {
-        service.request(.userList(userCount: userCount)) { result in
-            switch result{
-            case .success(let response):
-                //                parse and return data
-                break
-            case .failure(let error):
-                //                handle request error
-                break
+    public func fetch(
+        page: Int,
+        perPage: Int,
+        completion: @escaping (Result<[User], Error>) -> Void
+    ) {
+        service.request(.users(page: page, results: perPage)) { result in
+            switch result {
+            case let .success(response):
+                completion(
+                    Result {
+                        try JSONDecoder().decode(UsersResponse.self, from: response.data).results
+                    }
+                )
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }
     
-    
+}
+
+public extension UserProvider {
+    public struct UsersResponse: Decodable {
+        let results: [User]
+    }
 }
