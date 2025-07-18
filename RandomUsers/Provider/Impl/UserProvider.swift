@@ -37,7 +37,7 @@ final public class UserProvider: UserProviderProtocol {
 }
 
 public extension UserProvider {
-    public struct UsersResponse: Decodable {
+    struct UsersResponse: Decodable {
         let results: [User]
     }
 }

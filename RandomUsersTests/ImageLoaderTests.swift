@@ -16,7 +16,6 @@ final class ImageLoaderTests: XCTestCase {
             XCTFail(); return
         }
 
-        // положим в кэш напрямую
         loader.load(url) { _ in }
         loader.cache.setObject(dummy, forKey: url as NSURL)
 
